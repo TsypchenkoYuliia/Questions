@@ -16,5 +16,5 @@ export const Ininialize = () => {
         localStorage.setItem("topics", JSON.stringify(topics));
     }
 
-    return null;
+    return Ininialize;
 };

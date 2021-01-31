@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
 import 'antd/dist/antd.css';
 import { Input, Button, Select, Typography,Modal } from 'antd';
-import {
-    BoldOutlined, ItalicOutlined, UnderlineOutlined,
+import {BoldOutlined, ItalicOutlined, UnderlineOutlined,
     UnorderedListOutlined, OrderedListOutlined, LinkOutlined, PictureOutlined
 } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
+import {UpdateCollection} from './../data';
+import {GetCollection} from './../data';
 
 
 function AskQuestion() {
 
     let history = useHistory();
 
-    const questions = (JSON.parse(localStorage.getItem("questions")));
+    const questions = GetCollection("questions");
+    const topics = GetCollection("topics");
+
     const[title, SetTitle] = useState("");
     const[textQuestion, SetTextQuestion] = useState("");
-    const topics = (JSON.parse(localStorage.getItem("topics")));
     const[topic, SetTopic] = useState("");
     const[selectedTopics, SetSelectedTopics] = useState([]);
     const { Option } = Select;
@@ -51,7 +53,7 @@ function AskQuestion() {
         };
 
         topics.push(item);
-        localStorage.setItem("topics", JSON.stringify(topics));
+        UpdateCollection("topics", topics);
         setIsModalVisible(false);
     };
 
@@ -61,17 +63,21 @@ function AskQuestion() {
 
     const saveQuestion = () => {
 
-        let id = questions.length+1;
+        let id = (questions.length+1).toString();
 
         var item = {
             "id":id,
             "title": title,
             "textQuestion": textQuestion,
-            "topics": selectedTopics
+            "topics": selectedTopics,
+            "votes": 0,
+            "answers": [],
+            "rating": 0,
+            "date":new Date()
         };
 
         questions.push(item);
-        localStorage.setItem("questions", JSON.stringify(questions));
+        UpdateCollection("questions", questions);
         history.replace('/question/' + id);
     };
 

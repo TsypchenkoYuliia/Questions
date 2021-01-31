@@ -69,3 +69,18 @@
   flex-direction: column;
 }
 
+.card{
+  display:flex;
+  flex-direction: row;
+}
+
+.info{
+  display:flex;
+  flex-direction: column;
+}
+
+.answerContainer{
+  display:flex;
+  flex-direction: row;
+}
+
