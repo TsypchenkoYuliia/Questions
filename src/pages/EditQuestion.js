@@ -1,24 +1,27 @@
+
 import React, { useState } from 'react';
 import 'antd/dist/antd.css';
+import { useParams, useHistory } from "react-router-dom";
 import { Input, Button, Select, Typography,Modal } from 'antd';
 import {BoldOutlined, ItalicOutlined, UnderlineOutlined,
     UnorderedListOutlined, OrderedListOutlined, LinkOutlined, PictureOutlined
 } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
 import {UpdateCollection} from './../data';
 import {GetCollection} from './../data';
 import {GetCurrentUser} from './../data';
 
 
-function AskQuestion() {
+function EditQuestion() {
 
+    let { id } = useParams();
     let history = useHistory();
 
-    const questions = GetCollection("questions");
-    const topics = GetCollection("topics");
+    let questions = GetCollection("questions");
+    let topics = GetCollection("topics");
+    let question = questions.find(x=>x.id === id);
 
-    const[title, SetTitle] = useState(localStorage.getItem("questionsTitle"));
-    const[textQuestion, SetTextQuestion] = useState("");
+    const[title, SetTitle] = useState(question.title);
+    const[textQuestion, SetTextQuestion] = useState(question.textQuestion);
     const[topic, SetTopic] = useState("");
     const[selectedTopics, SetSelectedTopics] = useState([]);
     const { Option } = Select;
@@ -58,7 +61,6 @@ function AskQuestion() {
         setIsModalVisible(false);
 
         SetTopic("");
-
     };
 
     const handleCancel = () => {
@@ -67,23 +69,15 @@ function AskQuestion() {
 
     const saveQuestion = () => {
 
-        let id = (questions.length+1).toString();
+        const collection = GetCollection("questions");
+        let question = collection.find(x => x.id == id);
 
-        var item = {
-            "id":id,
-            "title": title,
-            "textQuestion": textQuestion,
-            "topics": selectedTopics.length === 0 ? [] : selectedTopics[selectedTopics.length-1],
-            "answers": [],
-            "date":new Date(),
-            "author": GetCurrentUser(),
-            "likes": [],
-            "dislikes": []
-        };
-        localStorage.setItem("questionsTitle", "");
-        questions.push(item);
-        UpdateCollection("questions", questions);
-        history.replace('/question/' + id);
+        question.title = title;
+        question.textQuestion = textQuestion;
+        question.topics = selectedTopics[selectedTopics.length-1];
+
+        UpdateCollection("questions", collection);
+        history.replace('/questions');
     };
 
     const cancelQuestion = () => {
@@ -102,7 +96,6 @@ function AskQuestion() {
         SetTopic(event.target.value);
     };
 
-    
 
     return <div className="askContainer">
         <span className='title'>Ask a question</span>
@@ -121,13 +114,14 @@ function AskQuestion() {
                 <LinkOutlined style={{ margin: 'auto' }} />
                 <PictureOutlined style={{ margin: 'auto' }} />
             </div>
-            <TextArea rows={6} onChange={textChange}/>
+            <TextArea rows={6} onChange={textChange} value={textQuestion}/>
 
             <Text style={{ marginTop: '10px', textAlign: 'left', marginTop: '20px' }}>Popular topics:</Text>
 
             <div className='topicContainer'>
                 <Select
                     mode="tags"
+                    defaultValue={question.topics}
                     size={topics.length}
                     placeholder="Please select topic"
                     onChange={handleChangeTopic}
@@ -147,4 +141,4 @@ function AskQuestion() {
     </div>;
 }
 
-export default AskQuestion;
+export default EditQuestion;

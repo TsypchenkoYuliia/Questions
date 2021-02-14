@@ -43,7 +43,7 @@
   flex-direction: column;
   margin:auto;
   margin-Top: 100px;
-  width: 400px;
+  width: 900px;
 }
 
 .title{
@@ -82,5 +82,37 @@
 .answerContainer{
   display:flex;
   flex-direction: row;
+}
+
+.nameContainer{
+  margin: auto;
+  margin-top: 250px;
+  width: 300px;
+  display:flex;
+  flex-direction: column;
+}
+
+.titleContainer{
+  display:flex;
+  flex-direction: row;
+}
+
+.box{
+  display:flex;
+  flex-direction: column;
+}
+
+.cardBox{
+  width: 800px;
+  margin: auto;
+  padding: 20px;
+  display:flex;
+  flex-direction: row;
+}
+
+
+.main{
+  background-color: #eceaea;
+  padding: 40px;
 }
 
