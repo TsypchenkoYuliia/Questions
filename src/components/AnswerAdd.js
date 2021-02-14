@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import { Select, Typography, Input, Button} from 'antd';
 import {BoldOutlined, ItalicOutlined, UnderlineOutlined,
     UnorderedListOutlined, OrderedListOutlined, LinkOutlined, PictureOutlined
@@ -13,7 +12,6 @@ function AnswerAdd(props) {
     const { Text } = Typography;
     const { TextArea } = Input;
     const { Option } = Select;
-    const[textAnswer, SetTextAnswer] = useState("");
 
     function handleChange(value) {
         console.log(`selected ${value}`);

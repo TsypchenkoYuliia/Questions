@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography, Button } from 'antd';
 import { useHistory } from 'react-router-dom';
-import Question from './../pages/Question';
 import Moment from 'moment';
 
 function QuestionItem(props) {
@@ -30,9 +29,9 @@ function QuestionItem(props) {
             <div className='titleContainer'>
                 {question.answers.length > 0 ? <div>
                     <Text style={{ marginRight: '10px' }} level={5}>{question.answers.length} answers</Text>&bull;
-                    <Text style={{ marginRight: '10px', marginLeft: '10px' }} level={5}>{question.answers[question.answers.length - 1].author}</Text>&bull;
-                    <Text style={{ marginLeft: '10px' }} level={5}>{Moment(question.answers[question.answers.length - 1].date).format('DD/MM/YYYY')}</Text>
                 </div> : <div></div>}
+                    <Text style={{ marginRight: '10px', marginLeft: '10px' }} level={5}>{question.author}</Text>&bull;
+                    <Text style={{ marginLeft: '10px' }} level={5}>{Moment(question.date).format('DD/MM/YYYY')}</Text>
             </div>
             <div className='titleContainer' style={{ marginTop: '10px', float: 'left' }}>
                 {question.topics === null || question.topics.length > 0 ? <div>

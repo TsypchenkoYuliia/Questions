@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { GetCollectionByFilter } from './../data';
 import QuestionItem from './../components/QuestionItem';
 import { Input, Button } from 'antd';
@@ -40,12 +40,6 @@ function Questions() {
                 <div className='card' style={{ width: '800px' }}>
                     <Input placeholder="What do you want to know?" onChange={titleChange} value={title}></Input>
                     <Button type="primary" onClick={saveTitle}>Ask Question</Button>
-                </div>
-                <div>
-                    {/* <div className='card'>
-                        <Text style={{marginRight:'10px'}} level={5}>Questions</Text>
-                        <Text level={5}>Topics</Text>
-                    </div> */}
                 </div>
             </div>
             <div className='card' style={{ marginTop:'10px' }}>

@@ -1,16 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from "react-router-dom";
-import { GetCollection } from './../data';
 import { UpCircleOutlined, DownCircleOutlined } from '@ant-design/icons';
 import { Select, Typography, Input, Button, Alert } from 'antd';
-import {
-    CommentOutlined, BoldOutlined, ItalicOutlined, UnderlineOutlined,
+import { CommentOutlined, BoldOutlined, ItalicOutlined, UnderlineOutlined,
     UnorderedListOutlined, OrderedListOutlined, LinkOutlined, PictureOutlined
 } from '@ant-design/icons';
-import { UpdateCollection } from './../data';
+import { UpdateCollection, GetCurrentUser, GetCollection } from './../data';
 import Moment from 'moment';
-import { GetCurrentUser } from './../data';
 
 
 function Question() {
@@ -48,11 +45,6 @@ function Question() {
         const collection = GetCollection("questions");
 
         let question = collection.find(x => x.id == id);
-
-        // collection.map((item) => {
-        //     if (item.id === id)
-        //         question = item;
-        // });
 
         let answerId = (question.answers.length + 1).toString();
 

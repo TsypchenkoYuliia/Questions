@@ -6,9 +6,7 @@ import { Input, Button, Select, Typography,Modal } from 'antd';
 import {BoldOutlined, ItalicOutlined, UnderlineOutlined,
     UnorderedListOutlined, OrderedListOutlined, LinkOutlined, PictureOutlined
 } from '@ant-design/icons';
-import {UpdateCollection} from './../data';
-import {GetCollection} from './../data';
-import {GetCurrentUser} from './../data';
+import {UpdateCollection, GetCollection} from './../data';
 
 
 function EditQuestion() {

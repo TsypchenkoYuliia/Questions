@@ -5,10 +5,7 @@ import {BoldOutlined, ItalicOutlined, UnderlineOutlined,
     UnorderedListOutlined, OrderedListOutlined, LinkOutlined, PictureOutlined
 } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
-import {UpdateCollection} from './../data';
-import {GetCollection} from './../data';
-import {GetCurrentUser} from './../data';
-
+import {UpdateCollection, GetCollection, GetCurrentUser} from './../data';
 
 function AskQuestion() {
 
@@ -108,20 +105,22 @@ function AskQuestion() {
         <span className='title'>Ask a question</span>
         <Input placeholder="What do you want to know?" onChange={titleChange} value={title}/>
         <div className='block'>
-            <div className='buttonsContainer' style={{ marginTop: '20px' }}  >
+            <div className='buttonsContainer' style={{ marginTop: '20px'}}  >
                 <Select defaultValue="Paragraf" style={{ width: 100 }} onChange={handleChange}>
                     <Option value="Heading">Heading</Option>
                     <Option value="Text">Text</Option>
                 </Select>
-                <BoldOutlined style={{ margin: 'auto' }} />
-                <ItalicOutlined style={{ margin: 'auto' }} />
-                <UnderlineOutlined style={{ margin: 'auto' }} />
-                <UnorderedListOutlined style={{ margin: 'auto' }} />
-                <OrderedListOutlined style={{ margin: 'auto' }} />
-                <LinkOutlined style={{ margin: 'auto' }} />
-                <PictureOutlined style={{ margin: 'auto' }} />
+                <div>
+                <BoldOutlined style={{ margin: 'auto', marginLeft:'10px' }} onClick={Weight}/>
+                <ItalicOutlined style={{ margin: 'auto', marginLeft:'10px'}} onClick={Italic}/>
+                <UnderlineOutlined style={{ margin: 'auto', marginLeft:'10px'}} onClick={Underline} />
+                <UnorderedListOutlined style={{ margin: 'auto', marginLeft:'10px' }} />
+                <OrderedListOutlined style={{ margin: 'auto', marginLeft:'10px' }} />
+                <LinkOutlined style={{ margin: 'auto', marginLeft:'10px' }} />
+                <PictureOutlined style={{ margin: 'auto', marginLeft:'10px' }} />
+                </div>
             </div>
-            <TextArea rows={6} onChange={textChange}/>
+            <TextArea rows={6} onChange={textChange} id='textBox'/>
 
             <Text style={{ marginTop: '10px', textAlign: 'left', marginTop: '20px' }}>Popular topics:</Text>
 
@@ -148,3 +147,22 @@ function AskQuestion() {
 }
 
 export default AskQuestion;
+
+
+function Weight () 
+{
+    const element = document.getElementById('textBox');
+    element.style.fontWeight = "800";   
+}
+
+function Italic () 
+{
+    const element = document.getElementById('textBox');
+    element.style.fontStyle = "italic";  
+}
+
+function Underline () 
+{
+    const element = document.getElementById('textBox');
+    element.style.textDecoration = "underline overline";
+}
