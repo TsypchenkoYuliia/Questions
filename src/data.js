@@ -19,13 +19,27 @@ export const GetCollectionByFilter = (collectionName, filter) => {
 
     let collection  = JSON.parse(localStorage.getItem(collectionName));
 
+
     switch(filter) {
         case 'popular':
           return collection.filter(x=>x.answers.length > 1);
         case 'unanswered':
           return collection.filter(x=>x.answers.length === 0);
-        default:
+        case 'recent':
           return collection;
+          case 'topic':
+            let array = [];
+            filter = localStorage.getItem("filterTopic");
+            collection.map((item)=> {
+                let s = item.topics?.filter(t=>t === filter);
+                    if(s?.length > 0)
+                    {
+                        array.push(item);
+                    }
+            });
+            return array;
+        default:
+            return collection;
       }
 };
 

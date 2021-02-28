@@ -33,6 +33,10 @@ function Questions() {
         history.replace('/questions/unanswered');
     }
 
+    function topicsFilter() {
+        history.replace('/questions/topics');
+    }
+
     return <div>
         <div className="askContainer">
             <span className='title'>Questions</span>

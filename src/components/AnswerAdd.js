@@ -18,6 +18,7 @@ function AnswerAdd(props) {
     }
 
     const textChange = (event) => {
+        
         SetTextAnswer(event.target.value);
     };
 

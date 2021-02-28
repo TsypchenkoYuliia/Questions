@@ -3,10 +3,9 @@ import React, { useState } from 'react';
 import 'antd/dist/antd.css';
 import { useParams, useHistory } from "react-router-dom";
 import { Input, Button, Select, Typography,Modal } from 'antd';
-import {BoldOutlined, ItalicOutlined, UnderlineOutlined,
-    UnorderedListOutlined, OrderedListOutlined, LinkOutlined, PictureOutlined
-} from '@ant-design/icons';
 import {UpdateCollection, GetCollection} from './../data';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 
 function EditQuestion() {
@@ -27,7 +26,7 @@ function EditQuestion() {
     const topicSelect = [];
 
         topics.map((item)=> {
-            topicSelect.push(<Option key={item.title}>{item.title}</Option>)});
+            topicSelect.push(<Option key={item}>{item}</Option>)});
        
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -43,26 +42,8 @@ function EditQuestion() {
         SetSelectedTopics(selectedTopics);
     }
 
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
-
-    const handleOk = () => {
-
-        var item = {
-            "id":topics.length+1,
-            "title": topic,
-        };
-
-        topics.push(item);
-        UpdateCollection("topics", topics);
-        setIsModalVisible(false);
-
-        SetTopic("");
-    };
-
-    const handleCancel = () => {
-        setIsModalVisible(false);
+    const textChange = value => {
+        SetTextQuestion(value);
     };
 
     const saveQuestion = () => {
@@ -86,35 +67,11 @@ function EditQuestion() {
         SetTitle(event.target.value);
     };
 
-    const textChange = (event) => {
-        SetTextQuestion(event.target.value);
-    };
-
-    const topicAdded = (event) => {
-        SetTopic(event.target.value);
-    };
-
-
     return <div className="askContainer">
         <span className='title'>Ask a question</span>
         <Input placeholder="What do you want to know?" onChange={titleChange} value={title}/>
         <div className='block'>
-            <div className='buttonsContainer' style={{ marginTop: '20px' }}  >
-                <Select defaultValue="Paragraf" style={{ width: 100 }} onChange={handleChange}>
-                    <Option value="Heading">Heading</Option>
-                    <Option value="Text">Text</Option>
-                </Select>
-                <BoldOutlined style={{ margin: 'auto' }} />
-                <ItalicOutlined style={{ margin: 'auto' }} />
-                <UnderlineOutlined style={{ margin: 'auto' }} />
-                <UnorderedListOutlined style={{ margin: 'auto' }} />
-                <OrderedListOutlined style={{ margin: 'auto' }} />
-                <LinkOutlined style={{ margin: 'auto' }} />
-                <PictureOutlined style={{ margin: 'auto' }} />
-            </div>
-            <TextArea rows={6} onChange={textChange} value={textQuestion}/>
-
-            <Text style={{ marginTop: '10px', textAlign: 'left', marginTop: '20px' }}>Popular topics:</Text>
+             <ReactQuill style={{ height: '200px', marginTop: '30px'}} onChange={textChange} value={textQuestion}/>
 
             <div className='topicContainer'>
                 <Select
@@ -126,15 +83,12 @@ function EditQuestion() {
                     style={{ width: '100%', textAlign: 'left', marginTop: '20px' }}>
                        {topicSelect}
                 </Select>
-                <Button style={{ marginTop: '20px' }} type="primary" onClick={showModal}>+</Button>
             </div>
             <div>
                 <Button style={{ marginTop: '20px', float: 'left' }} type="primary" onClick={saveQuestion}>Save</Button>
                 <Button style={{ marginTop: '20px', float: 'left' }} type="text" onClick={cancelQuestion}>Cancel</Button>
             </div>
-            <Modal title='Adding' visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                <Input placeholder="Enter new topic" value={topic} onChange={topicAdded}/>   
-            </Modal>
+
         </div>
     </div>;
 }

@@ -18,7 +18,12 @@ function QuestionItem(props) {
 
     let votes = question.likes.length - question.dislikes.length;
 
-    return <div onClick={Answers}>
+    const getBytopic = (event) => {
+       localStorage.setItem("filterTopic", event.target.innerText);
+       history.replace('/questions/topic');
+    };
+
+    return <div>
         <div className='cardBox'>
         <div className='box'>
             <Text style={{ marginTop: '10px' }}>{votes}</Text>
@@ -26,7 +31,7 @@ function QuestionItem(props) {
         </div>
         <div className='info' style={{ marginLeft: '50px', marginTop: '10px' }}>
             <Title level={5}>{question.title} </Title>
-            <div className='titleContainer'>
+            <div className='titleContainer' onClick={Answers}>
                 {question.answers.length > 0 ? <div>
                     <Text style={{ marginRight: '10px' }} level={5}>{question.answers.length} answers</Text>&bull;
                 </div> : <div></div>}
@@ -34,9 +39,9 @@ function QuestionItem(props) {
                     <Text style={{ marginLeft: '10px' }} level={5}>{Moment(question.date).format('DD/MM/YYYY')}</Text>
             </div>
             <div className='titleContainer' style={{ marginTop: '10px', float: 'left' }}>
-                {question.topics === null || question.topics.length > 0 ? <div>
+                { question.topics?.length >= 0 ? <div>
                     {question.topics.map(item => {
-                        return <Button type="dashed" style={{ fontSize: '10px', height: '25px', marginLeft: '5px' }} level={5} >{item}</Button>
+                        return <Button type="dashed" style={{ fontSize: '10px', height: '25px', marginLeft: '5px' }} level={5} onClick={getBytopic}>{item}</Button>
                     })}
                 </div> : <div></div>}
             </div>

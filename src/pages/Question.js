@@ -3,12 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import { UpCircleOutlined, DownCircleOutlined } from '@ant-design/icons';
 import { Select, Typography, Input, Button, Alert } from 'antd';
-import { CommentOutlined, BoldOutlined, ItalicOutlined, UnderlineOutlined,
-    UnorderedListOutlined, OrderedListOutlined, LinkOutlined, PictureOutlined
-} from '@ant-design/icons';
+import { CommentOutlined} from '@ant-design/icons';
 import { UpdateCollection, GetCurrentUser, GetCollection } from './../data';
 import Moment from 'moment';
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 function Question() {
 
@@ -16,8 +15,6 @@ function Question() {
     let history = useHistory();
 
     const { Text } = Typography;
-    const { TextArea } = Input;
-    const { Option } = Select;
     const [textAnswer, SetTextAnswer] = useState("");
     let [questions, setQuestions] = useState([]);
 
@@ -31,13 +28,8 @@ function Question() {
         }
     });
 
-
-    function handleChange(value) {
-        console.log(`selected ${value}`);
-    }
-
-    const textChange = (event) => {
-        SetTextAnswer(event.target.value);
+    const textChange = value => {
+        SetTextAnswer(value);
     };
 
     const saveAnswer = () => {
@@ -49,12 +41,12 @@ function Question() {
         let answerId = (question.answers.length + 1).toString();
 
         var item = {
-            "id": answerId,
-            "text": textAnswer,
-            "date": new Date(),
-            "author": GetCurrentUser(),
-            "likes": [],
-            "dislikes": []
+            id: answerId,
+            text: textAnswer,
+            date: new Date(),
+            author: GetCurrentUser(),
+            likes: [],
+            dislikes: []
         };
         SetTextAnswer("");
         question.answers.push(item);
@@ -64,34 +56,56 @@ function Question() {
     };
 
     function addLike() {
-
         let collection = GetCollection("questions");
         let currentUser = GetCurrentUser();
         let question = collection.find(x => x.id == id);
 
-        if (question.likes.length > 0 && question.likes.find(x => x === currentUser)) {
-            //<Alert message="You cannot like" type="error" /> 
-            alert("You cannot like");
+        let like = question.likes.find(x => x === currentUser);
+
+        if(like === undefined)
+        {
+            question.likes.push(currentUser);
         }
         else
-            question.likes.push(currentUser);
+        {
+            alert("You cannot like");
+        }
 
+        let dislike = question.dislikes.find(x => x === currentUser);
+
+        if(dislike !== undefined)
+        {
+            let index = question.dislikes.indexOf(currentUser);
+            question.dislikes.splice(index, 1);
+        }
+        
         UpdateCollection("questions", collection);
         setQuestions(GetCollection("questions"));
     }
 
     function addDislike() {
-
         let collection = GetCollection("questions");
         let currentUser = GetCurrentUser();
         let question = collection.find(x => x.id == id);
 
-        if (question.dislikes.length > 0 && question.dislikes.find(x => x === currentUser)) {
-            //<Alert message="You cannot like" type="error" /> 
-            alert("You cannot dislike");
+        let dislike = question.dislikes.find(x => x === currentUser);
+
+        if(dislike === undefined)
+        {
+            question.dislikes.push(currentUser);
         }
         else
-            question.dislikes.push(currentUser);
+        {
+            alert("You cannot dislike");
+        }
+
+        let like = question.likes.find(x => x === currentUser);
+
+        if(like !== undefined)
+        {
+            let index = question.likes.indexOf(currentUser);
+            question.likes.splice(index, 1);
+        }
 
         UpdateCollection("questions", collection);
         setQuestions(GetCollection("questions"));
@@ -104,12 +118,24 @@ function Question() {
         let question = collection.find(x => x.id == id);
         let answer = question.answers.find(x => x.id == answerId);
 
-        if (answer.likes.length > 0 && answer.likes.find(x => x === currentUser)) {
-            //<Alert message="You cannot dislike" type="error" />
-            alert("You cannot like");
+        let like = answer.likes.find(x => x === currentUser);
+
+        if(like === undefined)
+        {
+            answer.likes.push(currentUser);
         }
         else
-            answer.likes.push(currentUser);
+        {
+            alert("You cannot like");
+        }
+
+        let dislike = answer.dislikes.find(x => x === currentUser);
+
+        if(dislike !== undefined)
+        {
+            let index = answer.dislikes.indexOf(currentUser);
+            answer.dislikes.splice(index, 1);
+        }
 
         UpdateCollection("questions", collection);
         setQuestions(GetCollection("questions"));
@@ -122,12 +148,24 @@ function Question() {
         let question = collection.find(x => x.id == id);
         let answer = question.answers.find(x => x.id == answerId);
 
-        if (answer.dislikes.length > 0 && answer.dislikes.find(x => x === currentUser)) {
-            //<Alert message="You cannot dislike" type="error" />
-            alert("You cannot dislike");
+        let dislike = answer.dislikes.find(x => x === currentUser);
+
+        if(dislike === undefined)
+        {
+            answer.dislikes.push(currentUser);
         }
         else
-            answer.dislikes.push(currentUser);
+        {
+            alert("You cannot dislike");
+        }
+
+        let like = answer.likes.find(x => x === currentUser);
+
+        if(like !== undefined)
+        {
+            let index = answer.likes.indexOf(currentUser);
+            answer.likes.splice(index, 1);
+        }
 
         UpdateCollection("questions", collection);
         setQuestions(GetCollection("questions"));
@@ -150,12 +188,13 @@ function Question() {
 
     let count = 0;
 
+
     return <div className="askContainer" style={{ width: '800px' }}>
         <Text style={{ fontSize: '15px', fontSize: '25px', fontWeight: '400' }}>Answers to the question:</Text>
         <div className='card'>
             <div className='info' style={{ marginTop: '30px', marginLeft: '30px' }}>
                 <div><UpCircleOutlined style={{ fontSize: '25px' }} onClick={addLike} /></div>
-                <div style={{ fontSize: '30px', marginTop: '10px' }}>{question.likes.length - question.dislikes.length}</div>
+                <div style={{ fontSize: '30px', marginTop: '10px' }}>{question.likes.length - question.dislikes.length }</div>
                 <div><DownCircleOutlined style={{ fontSize: '25px', marginTop: '10px' }} onClick={addDislike} /></div>
             </div>
             <div className='info' style={{ marginTop: '25px', marginLeft: '30px' }}>
@@ -180,9 +219,9 @@ function Question() {
                     <div>
                         <div>
                             <Text key={item.id} style={{ fontSize: '15px', fontWeight: '400', width: '100px' }}>Answer&bull;{++count}</Text>
-                            <div>
+                            <div>                       
                                 <UpCircleOutlined style={{ fontSize: '15px' }} onClick={() => addLikeAnswer(item.id)} />
-                                <div style={{ fontSize: '15px' }}>{item.likes.length - item.dislikes.length}</div>
+                                <div style={{ fontSize: '15px' }}>{item.likes.length-item.dislikes.length}</div>
                                 <DownCircleOutlined style={{ fontSize: '15px' }} onClick={() => addDislikeAnswer(item.id)} /></div>
                         </div>
                     </div>
@@ -207,23 +246,9 @@ function Question() {
         </div>
         <div className='block' style={{ marginTop: '20px', width:'900px' }}>
             <Text style={{ marginRight: 'auto', marginLeft: '50px', fontSize: '25px', fontWeight: '400' }}>Your answer:</Text>
-            <div className='buttonsContainer' style={{ marginTop: '20px' }}  >
-                <Select defaultValue="Paragraf" style={{ width: 100 }} onChange={handleChange}>
-                    <Option value="Heading">Heading</Option>
-                    <Option value="Text">Text</Option>
-                </Select>
-                <BoldOutlined style={{ margin: 'auto' }} />
-                <ItalicOutlined style={{ margin: 'auto' }} />
-                <UnderlineOutlined style={{ margin: 'auto' }} />
-                <UnorderedListOutlined style={{ margin: 'auto' }} />
-                <OrderedListOutlined style={{ margin: 'auto' }} />
-                <LinkOutlined style={{ margin: 'auto' }} />
-                <PictureOutlined style={{ margin: 'auto' }} />
-                <div style={{ width: '450px' }}></div>
-            </div>
-            <TextArea rows={6} onChange={textChange} value={textAnswer} />
+             <ReactQuill style={{ height: '200px', marginTop: '30px'}} onChange={textChange} value={textAnswer}/>
         </div>
-        <Button style={{ marginTop: '20px', float: 'left', width: '100px', marginBottom: '50px' }} type="primary" onClick={saveAnswer}>Add answer</Button>
+        <Button style={{ marginTop: '70px', float: 'left', width: '100px', marginBottom: '50px' }} type="primary" onClick={saveAnswer}>Add answer</Button>
     </div>
 }
 
